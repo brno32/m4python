@@ -4,7 +4,13 @@ from m4python.virtual import virtual_p4
 class M4Adapter:
     @staticmethod
     def connect(p4):
+        # TODO: pass some mock info to the p4 instance?
         pass
+
+    @staticmethod
+    def run(p4, *args):
+        if args[0] == "info":
+            return virtual_p4.info
 
 
 class M4API:

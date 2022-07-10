@@ -11,7 +11,7 @@ class VirtualP4:
     """
 
     def __init__(self) -> None:
-        self.machine_name = "MachineName"
+        self.machine_name = "MockMachine"
 
         self.info = [
             {
