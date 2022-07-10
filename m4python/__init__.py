@@ -2,9 +2,9 @@ from unittest.mock import patch
 
 from decorator import decorator
 
-from m4python.m4 import M4
+from m4python.m4api import M4API
 
-mocked_p4 = patch("P4.P4", M4)
+mocked_p4 = patch("P4.P4API", M4API)
 # start the mock outside the decorator so we catch imports before it's applied
 mocked_p4.start()
 
