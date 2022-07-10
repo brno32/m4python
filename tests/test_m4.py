@@ -1,10 +1,10 @@
-from P4 import P4, P4Exception  # Import the module
-
 from m4python import mock_p4
 
 
 @mock_p4
 def test_m4():
+    from P4 import P4, P4Exception  # Import the module
+
     p4 = P4()  # Create the P4 instance
     p4.port = "1666"
     p4.user = "fred"
