@@ -13,5 +13,4 @@ def test_m4():
     try:  # Catch exceptions with try/except
         p4.connect()  # Connect to the Perforce server
     except P4Exception as reason:
-        print(reason)
         assert False
