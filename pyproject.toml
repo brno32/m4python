@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "m4python"
+version = "0.0.1"
+description = "Merforce is a library for mocking api calls to a Perforce server. This package provides a simple Python interface for mocking the p4python library, and rerouting all API calls to a virtual Perforce server."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/brno32/m4python"
+authors = ["Alex Drozd <drozdster@gmail.com>"]
+keywords = ["python", "p4python", "perforce", "testing", "mocking"]
+packages = [
+    { include = "m4python" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+responses = "^0.20.0"
+decorator = "^5.1.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+p4python = "2022.1.2299330"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
