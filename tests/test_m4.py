@@ -7,10 +7,10 @@ from P4 import P4, P4Exception  # Import the module
 def test_m4():
     p4 = P4()  # Create the P4 instance
     p4.port = "1666"
-    p4.user = "fred"
+    p4.user = "brno32"
     p4.client = "fred-ws"  # Set some environment variables
 
-    try:  # Catch exceptions with try/except
-        p4.connect()  # Connect to the Perforce server
-    except P4Exception as reason:
-        assert False
+    p4.connect()
+    info = p4.run("info")
+
+    assert info[0]["serverAddress"] == "MachineName:1666"

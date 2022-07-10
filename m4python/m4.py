@@ -11,3 +11,8 @@ class M4(P4):
 
     def connect(self):
         return self
+
+    def run(self, *args, **kargs):
+        if args[0] == "info":
+            return virtual_p4.info
+        return super().run(*args, **kargs)
