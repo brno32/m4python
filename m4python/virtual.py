@@ -1,4 +1,5 @@
 import os
+import time
 
 from logging import getLogger
 
@@ -21,6 +22,14 @@ class VirtualP4:
 
         # hardcoded, mock values
         self.machine_name = "MockMachine"
+
+        # depot stuff - data
+        self.depots = {"depot": []}
+
+        self.pending = {"depot": []}
+
+        # depot stuff - metadata
+        self.change = "0"
 
     def get_info(self):
         return [
@@ -49,6 +58,72 @@ class VirtualP4:
                 "memoryManager": "mimalloc 173",
             }
         ]
+
+    def get_files(self):
+        # TODO: dont assume default depot
+        # TODO: apply filtering
+        return self.depots["depot"]
+
+    def add_file(self, raw_path: str):
+        to_add_to_depo = {
+            "depotFile": f"//depot/{raw_path}",
+            "rev": "1",
+            "change": "1",
+            "action": "add",
+            "type": "text",
+            "time": f"{int(time.time())}",
+        }
+        # TODO: don't assume default depot
+        self.pending["depot"].append(to_add_to_depo)
+        to_return = {**to_add_to_depo}
+
+        # add in or replace values that are different in the return value
+        to_return["workRev"] = to_return.pop("rev")
+        to_return.pop("time")
+        to_return["clientFile"] = os.path.abspath(raw_path)
+
+        return to_return
+
+    def fetch_changelist(self):
+        return [
+            {
+                "Change": "new",
+                "Client": self.client_name,
+                "User": self.username,
+                "Status": "new",
+                "Description": "<enter description here>\n",
+                # TODO: don't assume default depot
+                "Files": [file_["depotFile"] for file_ in self.pending["depot"]],
+            }
+        ]
+
+    def submit_changelist(self):
+        # TODO: don't assume default depot
+        to_return = []
+
+        # empty pending and reset
+        pending = self.pending.pop("depot")
+        self.pending["depot"] = []
+        self.depots["depot"] += pending
+
+        self.change = f"{int(self.change) + 1}"
+
+        to_return.append(
+            {
+                "change": self.change,
+                # TODO: what is openFiles?
+                "openFiles": f"{len(pending)}",
+                # TODO: what is locked?
+                "locked": f"{len(pending)}",
+            }
+        )
+
+        for file_ in pending:
+            to_return.append(file_)
+
+        to_return.append({"submittedChange": "2"})
+
+        return to_return
 
 
 virtual_p4 = VirtualP4()

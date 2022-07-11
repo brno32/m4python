@@ -19,6 +19,15 @@ class M4Adapter:
 
         if args[0] == "info":
             return virtual_p4.get_info()
+        elif args[0] == "files":
+            return virtual_p4.get_files()
+        elif args[0] == "add":
+            return virtual_p4.add_file(args[1])
+        elif args[0] == "change":
+            return virtual_p4.fetch_changelist()
+        elif args[0] == "submit":
+            print(args)
+            return virtual_p4.submit_changelist()
 
 
 class M4API:
