@@ -11,19 +11,26 @@ class VirtualP4:
     """
 
     def __init__(self) -> None:
+        # values that should be set during connect
+        self.username = None
+        self.port = 1666
+        self.client_name = None
+
+        # hardcoded, mock values
         self.machine_name = "MockMachine"
 
-        self.info = [
+    def get_info(self):
+        return [
             {
-                "userName": "*unknown*",
-                "clientName": "*unknown*",
+                "userName": self.username,
+                "clientName": self.client_name,
                 "clientCwd": os.getcwd(),
                 "clientHost": self.machine_name,
                 "clientCase": "insensitive",
                 "peerAddress": "127.0.0.1:61532",
                 "clientAddress": "127.0.0.1",
                 "serverName": "Perforce",
-                "serverAddress": f"{self.machine_name}:1666",
+                "serverAddress": f"{self.machine_name}:{self.port}",
                 "serverRoot": "C:\\Perforce\\",
                 "serverDate": "2022/07/10 17:23:10 -0500 SA Pacific Standard Time",
                 "tzoffset": "-18000",

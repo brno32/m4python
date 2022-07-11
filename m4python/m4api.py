@@ -5,12 +5,14 @@ class M4Adapter:
     @staticmethod
     def connect(p4):
         # TODO: pass some mock info to the p4 instance?
-        pass
+        virtual_p4.username = p4.user
+        virtual_p4.port = p4.port
+        virtual_p4.client_name = p4.client
 
     @staticmethod
     def run(p4, *args):
         if args[0] == "info":
-            return virtual_p4.info
+            return virtual_p4.get_info()
 
 
 class M4API:

@@ -7,7 +7,7 @@ from P4 import P4, P4Exception  # Import the module
 def test_m4():
     p4 = P4()  # Create the P4 instance
     p4.port = "1666"
-    p4.user = "p4admin"
+    p4.user = "pytest-user"
     # p4.client should store the name of the client workspace
     p4.client = "P4PyTestWorkspace"  # Set some environment variables
 
