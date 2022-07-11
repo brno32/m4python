@@ -20,6 +20,8 @@ def test_m4():
     p4.connect()
 
     info = p4.run("info")
-    print(info)
 
+    assert info[0]["userName"] == "pytest-user"
+    assert info[0]["clientName"] == "P4PyTestWorkspace"
+    assert info[0]["clientHost"] == "MockMachine"
     assert info[0]["serverAddress"] == "MockMachine:1666"
