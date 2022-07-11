@@ -11,6 +11,9 @@ class VirtualP4:
     """
 
     def __init__(self) -> None:
+        # properties specific to this library
+        self.connected = False
+
         # values that should be set during connect
         self.username = None
         self.port = 1666

@@ -1,9 +1,12 @@
+from P4 import P4Exception
+
 from m4python.virtual import virtual_p4
 
 
 class M4Adapter:
     @staticmethod
     def connect(p4):
+        virtual_p4.connected = True
         # TODO: pass some mock info to the p4 instance?
         virtual_p4.username = p4.user
         virtual_p4.port = p4.port
@@ -11,6 +14,9 @@ class M4Adapter:
 
     @staticmethod
     def run(p4, *args):
+        if not virtual_p4.connected:
+            raise P4Exception("[P4.run()] not connected.")
+
         if args[0] == "info":
             return virtual_p4.get_info()
 
