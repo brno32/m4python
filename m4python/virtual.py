@@ -26,9 +26,9 @@ class VirtualP4:
         self.machine_name = "MockMachine"
 
         # depot stuff - data
-        self.depots = {"depot": []}
+        self.depots = {"depot": {}}
 
-        self.pending = {"depot": []}
+        self.pending = {"depot": {}}
 
         # depot stuff - metadata
         self.change = "0"
@@ -62,14 +62,12 @@ class VirtualP4:
         ]
 
     def get_files(self, glob_pattern: str):
-        filenames = []
-        # TODO: dont assume default depot
-        for file in self.depots["depot"]:
-            filenames.append(file["depotFile"])
-
-        matching = fnmatch.filter(filenames, glob_pattern)
-
-        return [file for file in self.depots["depot"] if file["depotFile"] in matching]
+        matching = fnmatch.filter(self.depots["depot"].keys(), glob_pattern)
+        return [
+            depot_file_obj
+            for depot_file, depot_file_obj in self.depots["depot"].items()
+            if depot_file in matching
+        ]
 
     def add_file(self, path: Path):
         # TODO: don't assume default depot
@@ -78,12 +76,14 @@ class VirtualP4:
         depot_file = f"{depot_prefix}/{path_as_posix}"
 
         # TODO: don't assume default depot
-        for file in self.pending["depot"]:
-            if file["depotFile"] == depot_file:
-                return [f"{depot_file}#{file['rev']} - currently opened for add"]
+        for file, depot_file_obj in self.pending["depot"].items():
+            if depot_file_obj["depotFile"] == depot_file:
+                return [
+                    f"{depot_file}#{depot_file_obj['rev']} - currently opened for add"
+                ]
         # TODO: don't assume default depot
-        for file in self.depots["depot"]:
-            if file["depotFile"] == depot_file:
+        for file, depot_file_obj in self.depots["depot"].items():
+            if depot_file_obj["depotFile"] == depot_file:
                 return [f"{depot_file} - can't add existing file"]
 
         to_add_to_depo = {
@@ -95,7 +95,7 @@ class VirtualP4:
             "time": f"{int(time.time())}",
         }
         # TODO: don't assume default depot
-        self.pending["depot"].append(to_add_to_depo)
+        self.pending["depot"][depot_file] = to_add_to_depo
         to_return = {**to_add_to_depo}
 
         # add in or replace values that are different in the return value
@@ -114,7 +114,7 @@ class VirtualP4:
                 "Status": "new",
                 "Description": "<enter description here>\n",
                 # TODO: don't assume default depot
-                "Files": [file_["depotFile"] for file_ in self.pending["depot"]],
+                "Files": [depot_file for depot_file in self.pending["depot"]],
             }
         ]
 
@@ -124,8 +124,8 @@ class VirtualP4:
 
         # empty pending and reset
         pending = self.pending.pop("depot")
-        self.pending["depot"] = []
-        self.depots["depot"] += pending
+        self.pending["depot"] = {}
+        self.depots["depot"] = {**self.depots["depot"], **pending}
 
         self.change = f"{int(self.change) + 1}"
 
