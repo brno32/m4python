@@ -5,7 +5,7 @@ import time
 from logging import getLogger
 from pathlib import Path
 
-from P4 import Spec
+from P4 import P4Exception, Spec
 
 logger = getLogger(__name__)
 
@@ -107,7 +107,11 @@ class VirtualP4:
     def edit_file(self, path: Path):
         # TODO: don't assume default depot
         depot_key = f"//depot/{path.as_posix()}"
-        depot_file = self.depots["depot"][depot_key]
+        try:
+            # TODO: don't assume default depot
+            depot_file = self.depots["depot"][depot_key]
+        except KeyError:
+            raise P4Exception(f"[Warning]: '{path} - file(s) not on client.'")
 
         # TODO: don't assume default depot
         if depot_key in self.pending["depot"]:

@@ -85,6 +85,10 @@ def test_m4():
         == f"//depot/{EXAMPLE_FILE_1.as_posix()}#2 - currently opened for edit"
     )
 
+    # and check we can't edit a non-existent file
+    with pytest.raises(P4Exception):
+        p4.run("edit", "awef" / EXAMPLE_FILE_1)
+
     change = p4.fetch_change()
 
     change._description = "Changelist from python"
