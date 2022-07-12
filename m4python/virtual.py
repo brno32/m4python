@@ -89,6 +89,7 @@ class VirtualP4:
         to_add_to_depo = {
             "depotFile": depot_file,
             "rev": "1",
+            # TODO: figure out change number
             "change": "1",
             "action": "add",
             "type": "text",
@@ -96,6 +97,32 @@ class VirtualP4:
         }
         # TODO: don't assume default depot
         self.pending["depot"][depot_file] = to_add_to_depo
+        to_return = {**to_add_to_depo}
+
+        # add in or replace values that are different in the return value
+        to_return["workRev"] = to_return.pop("rev")
+        to_return.pop("time")
+        to_return["clientFile"] = os.path.abspath(path)
+
+        return [to_return]
+
+    def edit_file(self, path: Path):
+        # TODO: don't assume default depot
+        depot_key = f"//depot/{path.as_posix()}"
+        depot_file = self.depots["depot"][depot_key]
+
+        to_add_to_depo = {
+            "depotFile": depot_key,
+            "rev": VirtualP4.increment_str(depot_file["rev"]),
+            # TODO: figure out change number
+            "change": "1",
+            "action": "edit",
+            "type": "text",
+            "time": f"{int(time.time())}",
+        }
+
+        # TODO: don't assume default depot
+        self.pending["depot"][depot_key] = to_add_to_depo
         to_return = {**to_add_to_depo}
 
         # add in or replace values that are different in the return value
@@ -125,7 +152,7 @@ class VirtualP4:
         self.pending["depot"] = {}
         self.depots["depot"] = {**self.depots["depot"], **pending}
 
-        self.change = f"{int(self.change) + 1}"
+        self.change = VirtualP4.increment_str(self.change)
 
         to_return.append(
             {
@@ -143,6 +170,14 @@ class VirtualP4:
         to_return.append({"submittedChange": self.change})
 
         return to_return
+
+    @staticmethod
+    def increment_str(number: str, step: int = 1):
+        """
+        Increments a string number by the specified step,
+        e.g., "1" + step == 1 + step, so increment_str("1", 1) == "2"
+        """
+        return f"{int(number) + step}"
 
 
 virtual_p4 = VirtualP4()

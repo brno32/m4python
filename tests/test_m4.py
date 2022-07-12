@@ -70,3 +70,10 @@ def test_m4():
     assert (
         response[0] == f"//depot/{EXAMPLE_FILE_1.as_posix()} - can't add existing file"
     )
+
+    # now see if we can edit that file
+    response = p4.run("edit", EXAMPLE_FILE_1)
+    assert response[0]["depotFile"] == f"//depot/{EXAMPLE_FILE_1.as_posix()}"
+    assert response[0]["action"] == "edit"
+    assert response[0]["workRev"] == "2"
+    assert response[0]["clientFile"] == str(Path(os.getcwd()) / EXAMPLE_FILE_1)

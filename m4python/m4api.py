@@ -23,10 +23,14 @@ class M4Adapter:
             return virtual_p4.get_files(args[1])
         elif args[0] == "add":
             return virtual_p4.add_file(args[1])
+        elif args[0] == "edit":
+            return virtual_p4.edit_file(args[1])
         elif args[0] == "change":
             return virtual_p4.fetch_changelist()
         elif args[0] == "submit":
             return virtual_p4.submit_changelist()
+
+        raise AssertionError(f"p4 {args[0]} not yet mocked by Merforce")
 
 
 class M4API:
