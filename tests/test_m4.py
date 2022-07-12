@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from pathlib import Path
@@ -6,7 +7,9 @@ from m4python import mock_p4
 
 from P4 import P4, P4Exception
 
-EXAMPLE_FILE_1 = Path("example.txt")
+TESTS_DIR = Path("tests")
+
+EXAMPLE_FILE_1 = TESTS_DIR / "example1.txt"
 
 
 @mock_p4
@@ -30,8 +33,12 @@ def test_m4():
     assert info[0]["clientHost"] == "MockMachine"
     assert info[0]["serverAddress"] == "MockMachine:1666"
 
-    response = p4.run("add", str(EXAMPLE_FILE_1))
-    # TODO: check response for sensible values
+    response = p4.run("add", EXAMPLE_FILE_1)
+    assert response[0]["depotFile"] == "//depot/tests/example1.txt"
+    assert response[0]["clientFile"] == str(Path(os.getcwd()) / EXAMPLE_FILE_1)
+    assert response[0]["workRev"] == "1"
+    assert response[0]["action"] == "add"
+    assert response[0]["type"] == "text"
 
     change = p4.fetch_change()
 
@@ -43,7 +50,7 @@ def test_m4():
 
     file_in_depot = response[0]
 
-    assert file_in_depot["depotFile"] == "//depot/example.txt"
+    assert file_in_depot["depotFile"] == "//depot/tests/example1.txt"
     assert file_in_depot["rev"] == "1"
     assert file_in_depot["change"] == "1"
     assert file_in_depot["action"] == "add"

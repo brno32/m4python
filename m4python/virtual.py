@@ -2,6 +2,7 @@ import os
 import time
 
 from logging import getLogger
+from pathlib import Path
 
 logger = getLogger(__name__)
 
@@ -64,9 +65,10 @@ class VirtualP4:
         # TODO: apply filtering
         return self.depots["depot"]
 
-    def add_file(self, raw_path: str):
+    def add_file(self, path: Path):
+        depoth_path = path.as_posix()
         to_add_to_depo = {
-            "depotFile": f"//depot/{raw_path}",
+            "depotFile": f"//depot/{depoth_path}",
             "rev": "1",
             "change": "1",
             "action": "add",
@@ -80,9 +82,9 @@ class VirtualP4:
         # add in or replace values that are different in the return value
         to_return["workRev"] = to_return.pop("rev")
         to_return.pop("time")
-        to_return["clientFile"] = os.path.abspath(raw_path)
+        to_return["clientFile"] = os.path.abspath(path)
 
-        return to_return
+        return [to_return]
 
     def fetch_changelist(self):
         return [
