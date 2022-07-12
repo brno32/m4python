@@ -34,7 +34,7 @@ def test_m4():
     assert info[0]["serverAddress"] == "MockMachine:1666"
 
     response = p4.run("add", EXAMPLE_FILE_1)
-    assert response[0]["depotFile"] == "//depot/tests/example1.txt"
+    assert response[0]["depotFile"] == f"//depot/{EXAMPLE_FILE_1.as_posix()}"
     assert response[0]["clientFile"] == str(Path(os.getcwd()) / EXAMPLE_FILE_1)
     assert response[0]["workRev"] == "1"
     assert response[0]["action"] == "add"
@@ -57,7 +57,7 @@ def test_m4():
 
     file_in_depot = response[0]
 
-    assert file_in_depot["depotFile"] == "//depot/tests/example1.txt"
+    assert file_in_depot["depotFile"] == f"//depot/{EXAMPLE_FILE_1.as_posix()}"
     assert file_in_depot["rev"] == "1"
     assert file_in_depot["change"] == "1"
     assert file_in_depot["action"] == "add"
