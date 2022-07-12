@@ -75,6 +75,10 @@ class VirtualP4:
         for file in self.pending["depot"]:
             if file["depotFile"] == depot_file:
                 return [f"{depot_file}#{file['rev']} - currently opened for add"]
+        # TODO: don't assume default depot
+        for file in self.depots["depot"]:
+            if file["depotFile"] == depot_file:
+                return [f"{depot_file} - can't add existing file"]
 
         to_add_to_depo = {
             "depotFile": depot_file,
