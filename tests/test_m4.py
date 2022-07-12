@@ -49,6 +49,8 @@ def test_m4():
 
     change = p4.fetch_change()
 
+    change._description = "Changelist from python"
+
     response = p4.run_submit(change)
 
     response = p4.run("files", "//depot/*")

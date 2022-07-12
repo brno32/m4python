@@ -5,6 +5,8 @@ import time
 from logging import getLogger
 from pathlib import Path
 
+from P4 import Spec
+
 logger = getLogger(__name__)
 
 
@@ -106,19 +108,17 @@ class VirtualP4:
         return [to_return]
 
     def fetch_changelist(self):
-        return [
-            {
-                "Change": "new",
-                "Client": self.client_name,
-                "User": self.username,
-                "Status": "new",
-                "Description": "<enter description here>\n",
-                # TODO: don't assume default depot
-                "Files": [depot_file for depot_file in self.pending["depot"]],
-            }
-        ]
+        change = Spec()
+        change["Change"] = "new"
+        change["Client"] = self.client_name
+        change["User"] = self.username
+        change["Status"] = "new"
+        change["Description"] = "<enter description here>\n"
+        change["Files"] = [depot_file for depot_file in self.pending["depot"]]
+        return [change]
 
     def submit_changelist(self):
+        # TODO: handle the case when it's not the default changelist
         # TODO: don't assume default depot
         to_return = []
 

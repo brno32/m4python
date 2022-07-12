@@ -13,7 +13,7 @@ class M4Adapter:
         virtual_p4.client_name = p4.client
 
     @staticmethod
-    def run(p4, *args):
+    def run(p4, *args, **kwargs):
         if not virtual_p4.connected:
             raise P4Exception("[P4.run()] not connected.")
 
