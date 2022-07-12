@@ -26,7 +26,6 @@ class M4Adapter:
         elif args[0] == "change":
             return virtual_p4.fetch_changelist()
         elif args[0] == "submit":
-            print(args)
             return virtual_p4.submit_changelist()
 
 

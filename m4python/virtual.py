@@ -136,7 +136,7 @@ class VirtualP4:
         for file_ in pending:
             to_return.append(file_)
 
-        to_return.append({"submittedChange": "2"})
+        to_return.append({"submittedChange": self.change})
 
         return to_return
 
