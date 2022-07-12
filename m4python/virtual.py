@@ -1,3 +1,4 @@
+import fnmatch
 import os
 import time
 
@@ -60,10 +61,15 @@ class VirtualP4:
             }
         ]
 
-    def get_files(self):
+    def get_files(self, glob_pattern: str):
+        filenames = []
         # TODO: dont assume default depot
-        # TODO: apply filtering
-        return self.depots["depot"]
+        for file in self.depots["depot"]:
+            filenames.append(file["depotFile"])
+
+        matching = fnmatch.filter(filenames, glob_pattern)
+
+        return [file for file in self.depots["depot"] if file["depotFile"] in matching]
 
     def add_file(self, path: Path):
         # TODO: don't assume default depot
