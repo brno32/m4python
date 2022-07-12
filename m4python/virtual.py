@@ -78,14 +78,12 @@ class VirtualP4:
         depot_file = f"{depot_prefix}/{path_as_posix}"
 
         # TODO: don't assume default depot
-        for file, depot_file_obj in self.pending["depot"].items():
-            if depot_file_obj["depotFile"] == depot_file:
-                return [
-                    f"{depot_file}#{depot_file_obj['rev']} - currently opened for add"
-                ]
+        for file in self.pending["depot"].values():
+            if file["depotFile"] == depot_file:
+                return [f"{depot_file}#{file['rev']} - currently opened for add"]
         # TODO: don't assume default depot
-        for file, depot_file_obj in self.depots["depot"].items():
-            if depot_file_obj["depotFile"] == depot_file:
+        for file in self.depots["depot"].values():
+            if file["depotFile"] == depot_file:
                 return [f"{depot_file} - can't add existing file"]
 
         to_add_to_depo = {
