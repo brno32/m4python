@@ -40,6 +40,13 @@ def test_m4():
     assert response[0]["action"] == "add"
     assert response[0]["type"] == "text"
 
+    # now test that if we try to add the same file again once it's already pending, we get an error
+    response = p4.run("add", EXAMPLE_FILE_1)
+    assert (
+        response[0]
+        == f"//depot/{EXAMPLE_FILE_1.as_posix()}#1 - currently opened for add"
+    )
+
     change = p4.fetch_change()
 
     response = p4.run_submit(change)
