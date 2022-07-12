@@ -73,21 +73,19 @@ class VirtualP4:
 
     def add_file(self, path: Path):
         # TODO: don't assume default depot
-        depot_prefix = "//depot"
-        path_as_posix = path.as_posix()
-        depot_file = f"{depot_prefix}/{path_as_posix}"
+        depot_key = f"//depot/{path.as_posix()}"
 
         # TODO: don't assume default depot
-        for file in self.pending["depot"].values():
-            if file["depotFile"] == depot_file:
-                return [f"{depot_file}#{file['rev']} - currently opened for add"]
+        if depot_key in self.pending["depot"]:
+            file = self.pending["depot"][depot_key]
+            return [f"{depot_key}#{file['rev']} - currently opened for add"]
         # TODO: don't assume default depot
-        for file in self.depots["depot"].values():
-            if file["depotFile"] == depot_file:
-                return [f"{depot_file} - can't add existing file"]
+        if depot_key in self.depots["depot"]:
+            file = self.depots["depot"][depot_key]
+            return [f"{depot_key} - can't add existing file"]
 
         to_add_to_depo = {
-            "depotFile": depot_file,
+            "depotFile": depot_key,
             "rev": "1",
             # TODO: figure out change number
             "change": VirtualP4.increment_str(self.change),
@@ -96,7 +94,7 @@ class VirtualP4:
             "time": f"{int(time.time())}",
         }
         # TODO: don't assume default depot
-        self.pending["depot"][depot_file] = to_add_to_depo
+        self.pending["depot"][depot_key] = to_add_to_depo
         to_return = {**to_add_to_depo}
 
         # add in or replace values that are different in the return value
@@ -112,9 +110,9 @@ class VirtualP4:
         depot_file = self.depots["depot"][depot_key]
 
         # TODO: don't assume default depot
-        for file in self.pending["depot"].values():
-            if file["depotFile"] == depot_key:
-                return [f"{depot_key}#{file['rev']} - currently opened for edit"]
+        if depot_key in self.pending["depot"]:
+            file = self.pending["depot"][depot_key]
+            return [f"{depot_key}#{file['rev']} - currently opened for edit"]
 
         to_add_to_depo = {
             "depotFile": depot_key,
