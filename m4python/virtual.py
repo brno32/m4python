@@ -111,6 +111,11 @@ class VirtualP4:
         depot_key = f"//depot/{path.as_posix()}"
         depot_file = self.depots["depot"][depot_key]
 
+        # TODO: don't assume default depot
+        for file in self.pending["depot"].values():
+            if file["depotFile"] == depot_key:
+                return [f"{depot_key}#{file['rev']} - currently opened for edit"]
+
         to_add_to_depo = {
             "depotFile": depot_key,
             "rev": VirtualP4.increment_str(depot_file["rev"]),

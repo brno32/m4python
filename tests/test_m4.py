@@ -78,6 +78,13 @@ def test_m4():
     assert response[0]["workRev"] == "2"
     assert response[0]["clientFile"] == str(Path(os.getcwd()) / EXAMPLE_FILE_1)
 
+    # make sure we can't edit twice
+    response = p4.run("edit", EXAMPLE_FILE_1)
+    assert (
+        response[0]
+        == f"//depot/{EXAMPLE_FILE_1.as_posix()}#2 - currently opened for edit"
+    )
+
     change = p4.fetch_change()
 
     change._description = "Changelist from python"
