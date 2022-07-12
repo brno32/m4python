@@ -17,9 +17,7 @@ decorator = "^5.1.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-# TODO: get this version working
-# p4python = "2020.1.2056111"
-p4python = "^2022.1.2299330"
+p4python = "2021.1.2265002"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
