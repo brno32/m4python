@@ -90,7 +90,7 @@ class VirtualP4:
             "depotFile": depot_file,
             "rev": "1",
             # TODO: figure out change number
-            "change": "1",
+            "change": VirtualP4.increment_str(self.change),
             "action": "add",
             "type": "text",
             "time": f"{int(time.time())}",
@@ -114,8 +114,7 @@ class VirtualP4:
         to_add_to_depo = {
             "depotFile": depot_key,
             "rev": VirtualP4.increment_str(depot_file["rev"]),
-            # TODO: figure out change number
-            "change": "1",
+            "change": VirtualP4.increment_str(self.change),
             "action": "edit",
             "type": "text",
             "time": f"{int(time.time())}",

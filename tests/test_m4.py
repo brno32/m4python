@@ -77,3 +77,19 @@ def test_m4():
     assert response[0]["action"] == "edit"
     assert response[0]["workRev"] == "2"
     assert response[0]["clientFile"] == str(Path(os.getcwd()) / EXAMPLE_FILE_1)
+
+    change = p4.fetch_change()
+
+    change._description = "Changelist from python"
+
+    response = p4.run_submit(change)
+
+    response = p4.run("files", "//depot/*")
+
+    assert len(response) == 1
+
+    file_in_depot = response[0]
+    assert file_in_depot["depotFile"] == f"//depot/{EXAMPLE_FILE_1.as_posix()}"
+    assert file_in_depot["rev"] == "2"
+    assert file_in_depot["change"] == "2"
+    assert file_in_depot["action"] == "edit"
